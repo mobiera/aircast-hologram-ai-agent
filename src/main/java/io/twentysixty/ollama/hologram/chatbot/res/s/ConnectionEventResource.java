@@ -1,12 +1,5 @@
 package io.twentysixty.ollama.hologram.chatbot.res.s;
 
-import jakarta.inject.Inject;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
@@ -17,6 +10,12 @@ import io.twentysixty.sa.client.model.event.ConnectionStateUpdated;
 import io.twentysixty.sa.client.model.event.DidExchangeState;
 import io.twentysixty.sa.client.res.s.ConnectionEventInterface;
 import io.twentysixty.sa.client.util.JsonUtil;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("")
 public class ConnectionEventResource implements ConnectionEventInterface {

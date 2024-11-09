@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.twentysixty.ollama.hologram.chatbot.ex.TokenException;
+import io.twentysixty.ollama.hologram.chatbot.model.Session;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
-import io.twentysixty.ollama.hologram.chatbot.ex.TokenException;
-import io.twentysixty.ollama.hologram.chatbot.model.Session;
 
 
 @ApplicationScoped

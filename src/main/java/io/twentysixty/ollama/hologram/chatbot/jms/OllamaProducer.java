@@ -1,11 +1,6 @@
 package io.twentysixty.ollama.hologram.chatbot.jms;
 
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import jakarta.jms.ConnectionFactory;
-
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -14,8 +9,11 @@ import org.jboss.logging.Logger;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import io.twentysixty.sa.client.jms.AbstractProducer;
-import io.twentysixty.sa.client.model.message.BaseMessage;
 import io.twentysixty.sa.client.util.JsonUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.jms.ConnectionFactory;
 
 
 @ApplicationScoped

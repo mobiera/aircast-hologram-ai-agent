@@ -1,15 +1,9 @@
 package io.twentysixty.ollama.hologram.chatbot.jms;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import jakarta.jms.ConnectionFactory;
-
 import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import io.github.ollama4j.models.chat.OllamaChatMessage;
@@ -19,9 +13,11 @@ import io.twentysixty.ollama.hologram.chatbot.model.LlamaRole;
 import io.twentysixty.ollama.hologram.chatbot.svc.OllamaService;
 import io.twentysixty.sa.client.jms.AbstractConsumer;
 import io.twentysixty.sa.client.jms.ConsumerInterface;
-import io.twentysixty.sa.client.model.message.BaseMessage;
 import io.twentysixty.sa.client.model.message.TextMessage;
-import io.twentysixty.sa.res.c.MessageResource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.jms.ConnectionFactory;
 
 @ApplicationScoped
 public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerInterface<UUID> {

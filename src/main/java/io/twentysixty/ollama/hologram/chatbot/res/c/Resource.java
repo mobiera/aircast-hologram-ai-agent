@@ -2,10 +2,10 @@ package io.twentysixty.ollama.hologram.chatbot.res.c;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
+
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.core.MediaType;
-
-import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 public class Resource {
 

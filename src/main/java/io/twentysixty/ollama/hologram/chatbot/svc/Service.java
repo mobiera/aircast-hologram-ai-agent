@@ -12,11 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.graalvm.collections.Pair;
@@ -29,7 +24,6 @@ import io.twentysixty.ollama.hologram.chatbot.jms.MtProducer;
 import io.twentysixty.ollama.hologram.chatbot.model.History;
 import io.twentysixty.ollama.hologram.chatbot.model.LlamaRole;
 import io.twentysixty.ollama.hologram.chatbot.model.Session;
-
 import io.twentysixty.ollama.hologram.chatbot.res.c.MediaResource;
 import io.twentysixty.ollama.hologram.chatbot.res.c.Resource;
 import io.twentysixty.sa.client.model.credential.CredentialType;
@@ -49,6 +43,10 @@ import io.twentysixty.sa.client.model.message.SubmitProofItem;
 import io.twentysixty.sa.client.model.message.TextMessage;
 import io.twentysixty.sa.client.util.JsonUtil;
 import io.twentysixty.sa.res.c.CredentialTypeResource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 
 
