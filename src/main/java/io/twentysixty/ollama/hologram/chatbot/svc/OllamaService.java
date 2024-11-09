@@ -18,6 +18,7 @@ import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatRequestBuilder;
 import io.github.ollama4j.models.chat.OllamaChatResult;
+import io.github.ollama4j.models.response.LibraryModelTag;
 import io.github.ollama4j.models.response.Model;
 import io.github.ollama4j.types.OllamaModelType;
 import io.twentysixty.ollama.hologram.chatbot.jms.OllamaProducer;
@@ -95,7 +96,7 @@ public class OllamaService {
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(timeout);
 
-        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance(OllamaModelType.LLAMA2);
+        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance("llama3.2:1b");
 		OllamaChatRequest requestModel = builder.withMessages(messages).build();
 		OllamaChatResult chatResult = ollamaAPI.chat(requestModel);
 
@@ -129,7 +130,7 @@ public class OllamaService {
 		try {
 			models = ollamaAPI.listModels();
 			for (Model m: models) {
-				if (m.getName().startsWith("llama2:")) {
+				if (m.getName().startsWith("llama3.2:1b")) {
 					modelLoaded = true;
 				}
 				logger.info(m.getName());
@@ -142,7 +143,7 @@ public class OllamaService {
 		if (!modelLoaded) {
 			logger.info("loading model...");
 			try {
-				ollamaAPI.pullModel(OllamaModelType.LLAMA2);
+				ollamaAPI.pullModel("llama3.2:1b");
 			} catch (Exception e) {
 				logger.error("", e);
 			}
