@@ -26,10 +26,10 @@ import org.jgroups.util.Base64;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.twentysixty.ollama.hologram.chatbot.jms.MtProducer;
+import io.twentysixty.ollama.hologram.chatbot.model.History;
+import io.twentysixty.ollama.hologram.chatbot.model.LlamaRole;
 import io.twentysixty.ollama.hologram.chatbot.model.Session;
-import io.twentysixty.ollama.hologram.chatbot.res.c.FaucetRequest;
-import io.twentysixty.ollama.hologram.chatbot.res.c.FaucetResource;
-import io.twentysixty.ollama.hologram.chatbot.res.c.FaucetResponse;
+
 import io.twentysixty.ollama.hologram.chatbot.res.c.MediaResource;
 import io.twentysixty.ollama.hologram.chatbot.res.c.Resource;
 import io.twentysixty.sa.client.model.credential.CredentialType;
@@ -68,8 +68,6 @@ public class Service {
 	@RestClient
 	@Inject CredentialTypeResource credentialTypeResource;
 	
-	@RestClient
-	@Inject FaucetResource faucetResource;
 	
 	@ConfigProperty(name = "io.twentysixty.demos.auth.debug")
 	Boolean debug;
@@ -475,44 +473,12 @@ public class Service {
 			} 
 			
 			else if ((session != null) && (session.getAuthTs() != null)) {
-				if (content.strip().startsWith(CMD_ROOT_MENU_TO.toString())) {
-					String[] data = content.split("\\s", 2);
-					String address = null;
-					
-					if (data.length<2) {
-						
-						if (session.getAddress() != null) {
-							address = session.getAddress();
-						}
-						
-					} else {
-						address = data[1];
-						
-					}
-					
-					
-					if ((address != null) && (address.length()>10) && (address.startsWith("verana")) ) {
-						FaucetResponse response = null;
-						
-							try {
-								FaucetRequest request = new FaucetRequest();
-								request.setAddress(address);
-								response = faucetResource.faucet(request);
-								mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SUCCESS").replaceAll("TX", response.getTransactionHash())));
-								session.setAddress(address);
-								session = em.merge(session);
-							}
-							catch (Exception e) {
-								mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("WAIT").replaceAll("MESSAGE", response!=null?response.getMessage():"")));
-							}			
-						
-					} else {
-						mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("USAGE")));
-					}
-
-				} else {
-					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("USAGE")));
-				}
+				History history = new History();
+				history.setSession(session);
+				history.setData(content);
+				history.setTs(Instant.now());
+				history.setRole(LlamaRole.USER);
+				em.persist(history);
 				
 			} else {	
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("ERROR_NOT_AUTHENTICATED")));

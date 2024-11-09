@@ -17,7 +17,7 @@ import io.twentysixty.sa.client.util.JsonUtil;
 
 
 @ApplicationScoped
-public class MtProducer extends AbstractProducer {
+public class MtProducer extends AbstractProducer<BaseMessage> {
 
 	@Inject
     ConnectionFactory _connectionFactory;

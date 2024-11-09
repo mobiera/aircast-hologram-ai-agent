@@ -16,7 +16,7 @@ import io.twentysixty.sa.client.jms.ConsumerInterface;
 import io.twentysixty.sa.client.model.message.BaseMessage;
 
 @ApplicationScoped
-public class MoConsumer extends AbstractConsumer implements ConsumerInterface {
+public class MoConsumer extends AbstractConsumer<BaseMessage> implements ConsumerInterface<BaseMessage> {
 
 	@Inject Service gaiaService;
 
