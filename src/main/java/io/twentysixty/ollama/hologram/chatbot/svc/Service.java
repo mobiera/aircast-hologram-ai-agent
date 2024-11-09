@@ -476,6 +476,7 @@ public class Service {
 				history.setData(content);
 				history.setTs(Instant.now());
 				history.setRole(LlamaRole.USER);
+				history.setHistoryId(UUID.randomUUID());
 				em.persist(history);
 				
 			} else {	
