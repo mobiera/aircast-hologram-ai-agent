@@ -66,7 +66,8 @@ public class OllamaService {
 	
 	public List<OllamaChatMessage> getMessagesFromHistory(UUID connectionId) {
 		
-		List<History> histories = this.getHistory(connectionId);
+		Session s = em.find(Session.class, connectionId);
+		List<History> histories = this.getHistory(s);
 		
 		List<OllamaChatMessage> messages = new ArrayList<OllamaChatMessage>(histories.size());
 		
@@ -101,9 +102,9 @@ public class OllamaService {
 		return chatResult.getResponse();
 	}
  	
-	public List<History> getHistory(UUID connectionId) {
+	public List<History> getHistory(Session session) {
 		Query q = em.createNamedQuery("History.find");
-		q.setParameter("connectionId", connectionId);
+		q.setParameter("session", session);
 		q.setMaxResults(maxHistorySize);
 		return q.getResultList();
 	}
