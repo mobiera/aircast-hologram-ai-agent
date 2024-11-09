@@ -37,10 +37,10 @@ public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerIn
 	Long _exDelay;
 	
 	
-	@ConfigProperty(name = "io.twentysixty.demos.auth.jms.ollamamt.queue.name")
+	@ConfigProperty(name = "io.twentysixty.demos.auth.jms.ollama.queue.name")
 	String _queueName;
 	
-	@ConfigProperty(name = "io.twentysixty.demos.auth.jms.ollamamt.consumer.threads")
+	@ConfigProperty(name = "io.twentysixty.demos.auth.jms.ollama.consumer.threads")
 	Integer _threads;
 	
 	@ConfigProperty(name = "io.twentysixty.demos.auth.debug")
