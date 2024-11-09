@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatRequestBuilder;
 import io.github.ollama4j.models.chat.OllamaChatResult;
+import io.github.ollama4j.models.response.Model;
 import io.github.ollama4j.types.OllamaModelType;
 import io.twentysixty.ollama.hologram.chatbot.jms.MtProducer;
 import io.twentysixty.ollama.hologram.chatbot.jms.OllamaProducer;
@@ -117,6 +119,9 @@ public class OllamaService {
 	}
 	
 	public String getChatResponse(List<OllamaChatMessage> messages) throws OllamaBaseException, IOException, InterruptedException {
+		
+		this.checkModels();
+		
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(timeout);
 
@@ -144,5 +149,34 @@ public class OllamaService {
 		Session s = em.find(Session.class, connectionId);
 		h.setSession(s);
 		em.persist(h);
+	}
+	
+	private void checkModels() {
+		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
+		ollamaAPI.setRequestTimeoutSeconds(300);
+		boolean modelLoaded = false;
+        List<Model> models;
+		try {
+			models = ollamaAPI.listModels();
+			for (Model m: models) {
+				if (m.getName().startsWith("llama2:")) {
+					modelLoaded = true;
+				}
+				logger.info(m.getName());
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		if (!modelLoaded) {
+			logger.info("loading model...");
+			try {
+				ollamaAPI.pullModel(OllamaModelType.LLAMA2);
+			} catch (Exception e) {
+				logger.error("", e);
+			}
+		}
+        
 	}
 }
