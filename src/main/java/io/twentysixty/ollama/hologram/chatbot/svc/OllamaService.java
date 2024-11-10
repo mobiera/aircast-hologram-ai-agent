@@ -115,7 +115,7 @@ public class OllamaService {
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(timeout);
 
-        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance("llama3.2:1b");
+        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance("llama3.2");
 		OllamaChatRequest requestModel = builder.withMessages(messages).build();
 		OllamaChatResult chatResult = ollamaAPI.chat(requestModel);
 
@@ -149,7 +149,7 @@ public class OllamaService {
 		try {
 			models = ollamaAPI.listModels();
 			for (Model m: models) {
-				if (m.getName().startsWith("llama3.2:1b")) {
+				if (m.getName().startsWith("llama3.2")) {
 					modelLoaded = true;
 				}
 				logger.info(m.getName());
@@ -162,7 +162,7 @@ public class OllamaService {
 		if (!modelLoaded) {
 			logger.info("loading model...");
 			try {
-				ollamaAPI.pullModel("llama3.2:1b");
+				ollamaAPI.pullModel("llama3.2");
 			} catch (Exception e) {
 				logger.error("", e);
 			}
