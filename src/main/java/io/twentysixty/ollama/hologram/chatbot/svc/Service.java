@@ -526,7 +526,7 @@ public class Service {
 			else if ((session != null) && (session.getAuthTs() != null)) {
 				
 				if (session.getModel() == null) {
-					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
+					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", "<no model selected>")));
 				} else {
 					
 					if (ollamaService.checkModels(session.getModel())) {
@@ -537,7 +537,7 @@ public class Service {
 						
 						ollamaProducer.sendMessage(msg);
 					} else {
-						mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
+						mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", session.getModel())));
 
 					}
 					
