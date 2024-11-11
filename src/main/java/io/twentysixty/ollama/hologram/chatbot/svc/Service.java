@@ -151,7 +151,8 @@ public class Service {
 	private static String CMD_ROOT_MENU_NO_CRED = "/nocred";
 	private static String CMD_ROOT_MENU_OPTION1 = "/option1";
 	private static String CMD_ROOT_MENU_LOGOUT = "/logout";
-	private static String CMD_ROOT_MENU_TO = "/to";
+	
+	private static String CMD_ROOT_MENU_HELP = "/help";
 	
 	private static String CMD_ROOT_MENU_SET_MODEL = "/set";
 	
@@ -507,7 +508,13 @@ public class Service {
 				}
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("UNAUTHENTICATED")));
 
-			} else if (content.equals(CMD_ROOT_MENU_CLEAR.toString())) {
+			} else if (content.equals(CMD_ROOT_MENU_HELP.toString())) {
+				
+				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("USAGE")));
+
+			} 
+			
+			else if (content.equals(CMD_ROOT_MENU_CLEAR.toString())) {
 				
 				if (session != null) {
 					Query q = em.createNamedQuery("History.delete");
@@ -660,6 +667,8 @@ public class Service {
 				options.add(ContextualMenuItem.build(CMD_ROOT_MENU_SET_MODEL + " " + s.strip(), this.getMessage("CMD_ROOT_MENU_SET_MODEL_TEXT").replaceAll("MODEL", s), null));
 				
 			}
+			
+			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_HELP, this.getMessage("ROOT_MENU_HELP"), null));
 			
 			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_LOGOUT, this.getMessage("ROOT_MENU_LOGOUT"), null));
 			
