@@ -257,10 +257,8 @@ public class Service {
 			session = new Session();
 			session.setConnectionId(connectionId);
 			this.getModels();
-			if (ollamaService.checkModels(defaultModel)) {
-				session.setModel(defaultModel);
-				em.persist(session);
-			}
+			session.setModel(defaultModel);
+			em.persist(session);
 			
 			
 		}
@@ -530,12 +528,21 @@ public class Service {
 				if (session.getModel() == null) {
 					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
 				} else {
-					OllamaMsg msg = new OllamaMsg();
-					msg.setContent(content);
-					msg.setUuid(session.getConnectionId());
-					msg.setModel(session.getModel());
 					
-					ollamaProducer.sendMessage(msg);
+					if (ollamaService.checkModels(session.getModel())) {
+						OllamaMsg msg = new OllamaMsg();
+						msg.setContent(content);
+						msg.setUuid(session.getConnectionId());
+						msg.setModel(session.getModel());
+						
+						ollamaProducer.sendMessage(msg);
+					} else {
+						mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
+
+					}
+					
+					
+					
 				}
 				
 				
