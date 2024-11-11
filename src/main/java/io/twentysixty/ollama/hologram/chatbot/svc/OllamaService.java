@@ -124,7 +124,7 @@ public class OllamaService {
 		em.persist(h);
 	}
 	
-	private void checkModels(String model) {
+	public boolean checkModels(String model) {
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(300);
 		boolean modelLoaded = false;
@@ -135,13 +135,14 @@ public class OllamaService {
 				if (m.getName().startsWith(model)) {
 					modelLoaded = true;
 				}
-				logger.info(m.getName());
+				logger.info("loaded model: " + m.getName());
 			}
 			
 		} catch (Exception e) {
 			logger.error("", e);
 		}
-
+		return modelLoaded;
+		/*
 		if (!modelLoaded) {
 			logger.info("loading model...");
 			try {
@@ -150,6 +151,7 @@ public class OllamaService {
 				logger.error("", e);
 			}
 		}
+		*/
         
 	}
 }

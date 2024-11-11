@@ -65,6 +65,8 @@ public class Service {
 	
 	@Inject MtProducer mtProducer;
 	@Inject OllamaProducer ollamaProducer;
+	@Inject OllamaService ollamaService;
+	
 	
 	@RestClient
 	@Inject CredentialTypeResource credentialTypeResource;
@@ -255,15 +257,12 @@ public class Service {
 			session = new Session();
 			session.setConnectionId(connectionId);
 			this.getModels();
-			session.setModel(defaultModel);
-			em.persist(session);
-			
-		} else {
-			if (session.getModel() == null) {
-				this.getModels();
+			if (ollamaService.checkModels(defaultModel)) {
 				session.setModel(defaultModel);
-				session = em.merge(session);
+				em.persist(session);
 			}
+			
+			
 		}
 		
 		return session;
@@ -511,22 +510,35 @@ public class Service {
 				
 				content = content.replaceAll(CMD_ROOT_MENU_SET_MODEL.toString(), "").strip();
 				
-				if (session != null) {
-					session.setModel(content);
-					session = em.merge(session);
-				}
-				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL").replaceAll("MODEL", content)));
+				if (ollamaService.checkModels(content)) {
+					if (session != null) {
+						session.setModel(content);
+						session = em.merge(session);
+					}
+					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL").replaceAll("MODEL", content)));
+				} else {
+					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
 
+				}
+				
+				
+				
 			} 
 			
 			else if ((session != null) && (session.getAuthTs() != null)) {
 				
-				OllamaMsg msg = new OllamaMsg();
-				msg.setContent(content);
-				msg.setUuid(session.getConnectionId());
-				msg.setModel(session.getModel());
+				if (session.getModel() == null) {
+					mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL_ERROR").replaceAll("MODEL", content)));
+				} else {
+					OllamaMsg msg = new OllamaMsg();
+					msg.setContent(content);
+					msg.setUuid(session.getConnectionId());
+					msg.setModel(session.getModel());
+					
+					ollamaProducer.sendMessage(msg);
+				}
 				
-				ollamaProducer.sendMessage(msg);
+				
 				
 			} else {	
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("ERROR_NOT_AUTHENTICATED")));
