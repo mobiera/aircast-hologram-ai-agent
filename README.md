@@ -1,5 +1,7 @@
 # Ollama Hologram Chatbot
 
+![Ollama](src/main/resources/META-INF/resources/avatar.png)
+
 A conversational service (chatbot) for for interacting with a Ollama server.
 
 See [k8s/example](k8s/example/) for a deployment example.
