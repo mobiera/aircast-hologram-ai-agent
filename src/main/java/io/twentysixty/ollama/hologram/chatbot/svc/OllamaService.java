@@ -78,24 +78,6 @@ public class OllamaService {
 			OllamaChatMessageRole role;
 			try {
 				
-				/*switch (h.getRole()) {
-					
-					case ASSISTANT: {
-						
-					}
-					case USER: {
-						
-					}
-					case TOOL: {
-						
-					}
-					default:
-					case SYSTEM: {
-						
-					}
-						
-				}*/
-				
 				role = OllamaChatMessageRole.getRole(h.getRole().toString().toLowerCase());
 			} catch (RoleNotFoundException e) {
 				role = OllamaChatMessageRole.SYSTEM;

@@ -21,6 +21,7 @@ import org.jgroups.util.Base64;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.twentysixty.ollama.hologram.chatbot.jms.MtProducer;
+import io.twentysixty.ollama.hologram.chatbot.jms.OllamaMsg;
 import io.twentysixty.ollama.hologram.chatbot.jms.OllamaProducer;
 import io.twentysixty.ollama.hologram.chatbot.model.History;
 import io.twentysixty.ollama.hologram.chatbot.model.LlamaRole;
@@ -473,15 +474,12 @@ public class Service {
 			} 
 			
 			else if ((session != null) && (session.getAuthTs() != null)) {
-				History history = new History();
-				history.setSession(session);
-				history.setData(content);
-				history.setTs(Instant.now());
-				history.setRole(LlamaRole.USER);
-				history.setHistoryId(UUID.randomUUID());
-				em.persist(history);
 				
-				ollamaProducer.sendMessage(session.getConnectionId());
+				OllamaMsg msg = new OllamaMsg();
+				msg.setContent(content);
+				msg.setUuid(session.getConnectionId());
+				
+				ollamaProducer.sendMessage(msg);
 				
 			} else {	
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("ERROR_NOT_AUTHENTICATED")));

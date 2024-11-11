@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
+import io.github.ollama4j.exceptions.RoleNotFoundException;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import io.twentysixty.ollama.hologram.chatbot.model.LlamaRole;
@@ -20,7 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.jms.ConnectionFactory;
 
 @ApplicationScoped
-public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerInterface<UUID> {
+public class OolamaConsumer extends AbstractConsumer<OllamaMsg> implements ConsumerInterface<OllamaMsg> {
 
 	@Inject
 	OllamaService service;
@@ -74,9 +76,9 @@ public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerIn
     }
 	
     @Override
-	public void receiveMessage(UUID uuid) throws Exception {
+	public void receiveMessage(OllamaMsg msg) throws Exception {
 		
-    	List<OllamaChatMessage> messages = service.getMessagesFromHistory(uuid);
+    	List<OllamaChatMessage> messages = service.getMessagesFromHistory(msg.getUuid());
     	
     	logger.info("receive message\n");
     	
@@ -86,9 +88,16 @@ public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerIn
     		i++;
     	}
     	
+    	OllamaChatMessage m = new OllamaChatMessage();
+		
+		m.setContent(msg.getContent());
+		m.setRole(OllamaChatMessageRole.USER);
+		messages.add(m);
+		
     	String response = service.getChatResponse(messages);
-    	service.historize(uuid, LlamaRole.ASSISTANT, response);
-    	TextMessage tm = TextMessage.build(uuid, null, response);
+    	service.historize(msg.getUuid(), LlamaRole.USER, msg.getContent());
+    	service.historize(msg.getUuid(), LlamaRole.ASSISTANT, response);
+    	TextMessage tm = TextMessage.build(msg.getUuid(), null, response);
     	mtProducer.sendMessage(tm);
 		
 	}

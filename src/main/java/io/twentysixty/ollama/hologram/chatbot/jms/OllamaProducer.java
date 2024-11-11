@@ -17,7 +17,7 @@ import jakarta.jms.ConnectionFactory;
 
 
 @ApplicationScoped
-public class OllamaProducer extends AbstractProducer<UUID> {
+public class OllamaProducer extends AbstractProducer<OllamaMsg> {
 
 	@Inject
     ConnectionFactory _connectionFactory;
@@ -60,7 +60,7 @@ public class OllamaProducer extends AbstractProducer<UUID> {
  
  
     @Override
-    public void sendMessage(UUID message) throws Exception {
+    public void sendMessage(OllamaMsg message) throws Exception {
     	if(_debug) {
     		logger.info("sendMessage: " + JsonUtil.serialize(message, false));
     	}
