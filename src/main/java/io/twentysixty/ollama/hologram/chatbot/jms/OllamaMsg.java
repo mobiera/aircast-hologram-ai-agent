@@ -7,6 +7,8 @@ public class OllamaMsg implements Serializable {
 
 	private UUID uuid;
 	private String content;
+	private String model;
+	
 	public UUID getUuid() {
 		return uuid;
 	}
@@ -18,6 +20,12 @@ public class OllamaMsg implements Serializable {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getModel() {
+		return model;
+	}
+	public void setModel(String model) {
+		this.model = model;
 	}
 	
 }

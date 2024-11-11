@@ -136,11 +136,21 @@ public class Service {
 	@ConfigProperty(name = "io.twentysixty.demos.auth.vision.redirdomain.d")
 	Optional<String> dRedirDomain;
 	
+	
+	@ConfigProperty(name = "io.twentysixty.ollama.hologram.chatbot.ollamaserver.models")
+	String modelsString;
+	
+	private static String[] models = null;
+	private static String defaultModel = null;
+	
+	
 	private static String CMD_ROOT_MENU_AUTHENTICATE = "/auth";
 	private static String CMD_ROOT_MENU_NO_CRED = "/nocred";
 	private static String CMD_ROOT_MENU_OPTION1 = "/option1";
 	private static String CMD_ROOT_MENU_LOGOUT = "/logout";
 	private static String CMD_ROOT_MENU_TO = "/to";
+	
+	private static String CMD_ROOT_MENU_SET_MODEL = "/set";
 	
 	
 	
@@ -168,6 +178,24 @@ public class Service {
 	//private static HashMap<UUID, SessionData> sessions = new HashMap<UUID, SessionData>();
 	private static CredentialType type = null;
 	private static Object lockObj = new Object();
+	
+	
+	private String[] getModels() {
+		synchronized(lockObj) {
+			if (models == null) {
+				models = modelsString.split(",");
+				
+			}
+			if ((models == null) || (models.length == 0)) {
+				models = new String[1];
+				models[0] = "llama3.2:3b";
+			}
+			defaultModel = models[0];
+		}
+		
+		
+		return models;
+	}
 	
 	
 	
@@ -226,6 +254,8 @@ public class Service {
 		if (session == null) {
 			session = new Session();
 			session.setConnectionId(connectionId);
+			this.getModels();
+			session.setModel(defaultModel);
 			em.persist(session);
 			
 		}
@@ -338,7 +368,7 @@ public class Service {
 		
 		
 		String content = null;
-
+		boolean contextual = false;
 		MediaMessage mm = null;
 		
 		if (message instanceof TextMessage) {
@@ -350,7 +380,7 @@ public class Service {
 			
 			ContextualMenuSelect menuSelect = (ContextualMenuSelect) message;
 			content = menuSelect.getSelectionId();
-			
+			contextual = true;
 		} else if ((message instanceof MenuSelectMessage)) {
 			
 			MenuSelectMessage menuSelect = (MenuSelectMessage) message;
@@ -471,6 +501,16 @@ public class Service {
 				}
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("UNAUTHENTICATED")));
 
+			} else if (contextual && (content.startsWith(CMD_ROOT_MENU_SET_MODEL.toString()))) {
+				
+				content = content.replaceAll(CMD_ROOT_MENU_SET_MODEL.toString(), "").strip();
+				
+				if (session != null) {
+					session.setModel(content);
+					session = em.merge(session);
+				}
+				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("SET_MODEL").replaceAll("MODEL", content)));
+
 			} 
 			
 			else if ((session != null) && (session.getAuthTs() != null)) {
@@ -478,6 +518,7 @@ public class Service {
 				OllamaMsg msg = new OllamaMsg();
 				msg.setContent(content);
 				msg.setUuid(session.getConnectionId());
+				msg.setModel(session.getModel());
 				
 				ollamaProducer.sendMessage(msg);
 				
@@ -572,7 +613,13 @@ public class Service {
 				
 			}
 			
-			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_OPTION1, ROOT_MENU_OPTION1, null));
+			//options.add(ContextualMenuItem.build(CMD_ROOT_MENU_OPTION1, ROOT_MENU_OPTION1, null));
+			
+			for (String s: this.getModels()) {
+				options.add(ContextualMenuItem.build(CMD_ROOT_MENU_SET_MODEL + " " + s, this.getMessage("CMD_ROOT_MENU_SET_MODEL_TEXT").replaceAll("MODEL", session.getModel()), null));
+				
+			}
+			
 			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_LOGOUT, this.getMessage("ROOT_MENU_LOGOUT"), null));
 			
 		}

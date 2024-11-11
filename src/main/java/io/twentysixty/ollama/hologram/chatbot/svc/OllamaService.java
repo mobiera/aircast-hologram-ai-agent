@@ -90,18 +90,17 @@ public class OllamaService {
 		return messages;
 	}
 	
-	public String getChatResponse(List<OllamaChatMessage> messages) throws OllamaBaseException, IOException, InterruptedException {
+	public String getChatResponse(List<OllamaChatMessage> messages, String model) throws OllamaBaseException, IOException, InterruptedException {
 		
-		this.checkModels();
+		this.checkModels(model);
 		
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(timeout);
 
-        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance("llama3.2");
+        OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance(model);
 		OllamaChatRequest requestModel = builder.withMessages(messages).build();
-		logger.info("");
 		OllamaChatResult chatResult = ollamaAPI.chat(requestModel);
-
+//"llama3.2"
 		return chatResult.getResponse();
 	}
  	
@@ -124,7 +123,7 @@ public class OllamaService {
 		em.persist(h);
 	}
 	
-	private void checkModels() {
+	private void checkModels(String model) {
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);
 		ollamaAPI.setRequestTimeoutSeconds(300);
 		boolean modelLoaded = false;
@@ -132,7 +131,7 @@ public class OllamaService {
 		try {
 			models = ollamaAPI.listModels();
 			for (Model m: models) {
-				if (m.getName().startsWith("llama3.2")) {
+				if (m.getName().startsWith(model)) {
 					modelLoaded = true;
 				}
 				logger.info(m.getName());
@@ -145,7 +144,7 @@ public class OllamaService {
 		if (!modelLoaded) {
 			logger.info("loading model...");
 			try {
-				ollamaAPI.pullModel("llama3.2");
+				ollamaAPI.pullModel(model);
 			} catch (Exception e) {
 				logger.error("", e);
 			}

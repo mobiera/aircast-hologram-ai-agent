@@ -54,6 +54,11 @@ public class Session implements Serializable {
 	private String avatarName;
 	
 	@Column(columnDefinition="text")
+	private String model;
+	
+	
+	
+	@Column(columnDefinition="text")
 	private String address;
 	
 	private UUID photo;
@@ -150,6 +155,14 @@ public class Session implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 
