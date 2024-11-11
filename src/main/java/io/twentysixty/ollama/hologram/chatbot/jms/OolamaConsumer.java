@@ -94,9 +94,16 @@ public class OolamaConsumer extends AbstractConsumer<OllamaMsg> implements Consu
     		m.setContent(msg.getContent());
     		m.setRole(OllamaChatMessageRole.USER);
     		messages.add(m);
+    		String response = null;
     		
-        	String response = service.getChatResponse(messages, msg.getModel());
-        	service.historize(msg.getUuid(), LlamaRole.USER, msg.getContent());
+    		try {
+    			response = service.getChatResponse(messages, msg.getModel());
+            	
+    		} catch (Exception e) {
+    			response = e.toString();
+    		}
+        	
+    		service.historize(msg.getUuid(), LlamaRole.USER, msg.getContent());
         	service.historize(msg.getUuid(), LlamaRole.ASSISTANT, response);
         	TextMessage tm = TextMessage.build(msg.getUuid(), null, response);
         	mtProducer.sendMessage(tm);
