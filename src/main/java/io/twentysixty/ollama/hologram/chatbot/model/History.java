@@ -30,6 +30,7 @@ import jakarta.persistence.Table;
 @DynamicInsert
 @NamedQueries({
 	@NamedQuery(name="History.find", query="SELECT h FROM History h where h.session=:session order by h.ts desc"),
+	@NamedQuery(name="History.delete", query="DELETE FROM History h where h.session=:session"),
 	
 })
 public class History implements Serializable {

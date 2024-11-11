@@ -48,6 +48,7 @@ import io.twentysixty.sa.res.c.CredentialTypeResource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
 
@@ -153,6 +154,8 @@ public class Service {
 	private static String CMD_ROOT_MENU_TO = "/to";
 	
 	private static String CMD_ROOT_MENU_SET_MODEL = "/set";
+	
+	private static String CMD_ROOT_MENU_CLEAR = "/clear";
 	
 	
 	
@@ -504,7 +507,19 @@ public class Service {
 				}
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("UNAUTHENTICATED")));
 
-			} else if (contextual && (content.startsWith(CMD_ROOT_MENU_SET_MODEL.toString()))) {
+			} else if (content.equals(CMD_ROOT_MENU_CLEAR.toString())) {
+				
+				if (session != null) {
+					Query q = em.createNamedQuery("History.delete");
+					q.setParameter("session", session);
+					q.executeUpdate();
+					
+				}
+				
+				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("CLEANED_HISTORY")));
+
+			} 
+			else if (contextual && (content.startsWith(CMD_ROOT_MENU_SET_MODEL.toString()))) {
 				
 				content = content.replaceAll(CMD_ROOT_MENU_SET_MODEL.toString(), "").strip();
 				
