@@ -552,6 +552,7 @@ public class Service {
 				} else {
 					mtProducer.sendMessage(TextMessage.build(connectionId, null , this.getMessage("AUTHENTICATION_SUCCESS")));
 				}
+				mtProducer.sendMessage(TextMessage.build(connectionId, null , this.getMessage("SET_MODEL").replaceAll("MODEL", session.getModel())));
 				mtProducer.sendMessage(TextMessage.build(connectionId, null , this.getMessage("USAGE")));
 			} catch (Exception e) {
 				logger.error("", e);
