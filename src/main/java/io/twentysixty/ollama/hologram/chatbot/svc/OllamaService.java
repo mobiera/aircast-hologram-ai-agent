@@ -92,6 +92,7 @@ public class OllamaService {
 	
 	public String getChatResponse(List<OllamaChatMessage> messages, String model) throws OllamaBaseException, IOException, InterruptedException {
 		
+		
 		this.checkModels(model);
 		
 		OllamaAPI ollamaAPI = new OllamaAPI(serviceUrl);

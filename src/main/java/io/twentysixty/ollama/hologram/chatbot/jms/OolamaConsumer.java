@@ -78,27 +78,30 @@ public class OolamaConsumer extends AbstractConsumer<OllamaMsg> implements Consu
     @Override
 	public void receiveMessage(OllamaMsg msg) throws Exception {
 		
-    	List<OllamaChatMessage> messages = service.getMessagesFromHistory(msg.getUuid());
-    	
-    	logger.info("receive message\n");
-    	
-    	int i = 0;
-    	for (OllamaChatMessage m: messages) {
-    		logger.info(i + " " + m.getRole() + " " + m.getContent());
-    		i++;
+    	if (msg.getModel() != null) {
+    		List<OllamaChatMessage> messages = service.getMessagesFromHistory(msg.getUuid());
+        	
+        	logger.info("receive message\n");
+        	
+        	int i = 0;
+        	for (OllamaChatMessage m: messages) {
+        		logger.info(i + " " + m.getRole() + " " + m.getContent());
+        		i++;
+        	}
+        	
+        	OllamaChatMessage m = new OllamaChatMessage();
+    		
+    		m.setContent(msg.getContent());
+    		m.setRole(OllamaChatMessageRole.USER);
+    		messages.add(m);
+    		
+        	String response = service.getChatResponse(messages, msg.getModel());
+        	service.historize(msg.getUuid(), LlamaRole.USER, msg.getContent());
+        	service.historize(msg.getUuid(), LlamaRole.ASSISTANT, response);
+        	TextMessage tm = TextMessage.build(msg.getUuid(), null, response);
+        	mtProducer.sendMessage(tm);
     	}
     	
-    	OllamaChatMessage m = new OllamaChatMessage();
-		
-		m.setContent(msg.getContent());
-		m.setRole(OllamaChatMessageRole.USER);
-		messages.add(m);
-		
-    	String response = service.getChatResponse(messages, msg.getModel());
-    	service.historize(msg.getUuid(), LlamaRole.USER, msg.getContent());
-    	service.historize(msg.getUuid(), LlamaRole.ASSISTANT, response);
-    	TextMessage tm = TextMessage.build(msg.getUuid(), null, response);
-    	mtProducer.sendMessage(tm);
 		
 	}
 
