@@ -97,8 +97,7 @@ public class OolamaConsumer extends AbstractConsumer<OllamaMsg> implements Consu
     		String response = null;
     		
     		try {
-    			response = service.getChatResponse(messages, msg.getModel());
-            	
+    			response = service.getChatResponse(messages, msg.getModel()); 	
     		} catch (Exception e) {
     			response = e.toString();
     		}
