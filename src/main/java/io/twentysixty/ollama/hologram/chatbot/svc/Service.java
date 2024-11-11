@@ -258,6 +258,12 @@ public class Service {
 			session.setModel(defaultModel);
 			em.persist(session);
 			
+		} else {
+			if (session.getModel() == null) {
+				this.getModels();
+				session.setModel(defaultModel);
+				session = em.merge(session);
+			}
 		}
 		
 		return session;
