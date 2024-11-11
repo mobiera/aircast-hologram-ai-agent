@@ -117,6 +117,7 @@ public class OllamaService {
 
         OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance("llama3.2");
 		OllamaChatRequest requestModel = builder.withMessages(messages).build();
+		logger.info("");
 		OllamaChatResult chatResult = ollamaAPI.chat(requestModel);
 
 		return chatResult.getResponse();

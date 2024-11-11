@@ -77,6 +77,15 @@ public class OolamaConsumer extends AbstractConsumer<UUID> implements ConsumerIn
 	public void receiveMessage(UUID uuid) throws Exception {
 		
     	List<OllamaChatMessage> messages = service.getMessagesFromHistory(uuid);
+    	
+    	logger.info("receive message\n");
+    	
+    	int i = 0;
+    	for (OllamaChatMessage m: messages) {
+    		logger.info(i + " " + m.getRole() + " " + m.getContent());
+    		i++;
+    	}
+    	
     	String response = service.getChatResponse(messages);
     	service.historize(uuid, LlamaRole.ASSISTANT, response);
     	TextMessage tm = TextMessage.build(uuid, null, response);
