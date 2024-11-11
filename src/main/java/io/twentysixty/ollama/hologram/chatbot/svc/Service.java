@@ -607,23 +607,23 @@ public class Service {
 			
 		} else {
 			if ((session.getFirstname() != null) && (session.getLastname() != null)) {
-				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getFirstname() + " " + session.getLastname()));
+				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getFirstname() + " " + session.getLastname()).replaceAll("MODEL", session.getModel()));
 				
 			} else if (session.getAvatarName() != null){
-				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getAvatarName()));
+				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getAvatarName()).replaceAll("MODEL", session.getModel()));
 				
 			} else if (session.getCitizenId() != null) {
-				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getCitizenId()));
+				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", session.getCitizenId()).replaceAll("MODEL", session.getModel()));
 				
 			} else {
-				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", ""));
+				menu.setDescription(getMessage("ROOT_MENU_AUTHENTICATED_DESCRIPTION").replaceAll("NAME", "").replaceAll("MODEL", session.getModel()));
 				
 			}
 			
 			//options.add(ContextualMenuItem.build(CMD_ROOT_MENU_OPTION1, ROOT_MENU_OPTION1, null));
 			
 			for (String s: this.getModels()) {
-				options.add(ContextualMenuItem.build(CMD_ROOT_MENU_SET_MODEL + " " + s, this.getMessage("CMD_ROOT_MENU_SET_MODEL_TEXT").replaceAll("MODEL", session.getModel()), null));
+				options.add(ContextualMenuItem.build(CMD_ROOT_MENU_SET_MODEL + " " + s.strip(), this.getMessage("CMD_ROOT_MENU_SET_MODEL_TEXT").replaceAll("MODEL", s), null));
 				
 			}
 			
