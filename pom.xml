@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.2060.demos</groupId>
-  <artifactId>langchain-hologram-chatbot</artifactId>
+  <artifactId>aifriends-hologram-chatbot</artifactId>
   <version>1.0.0</version>
-  <name>DIDComm Langchain Chatbot</name>
-  <description>Deploy your own langchain based DIDcomm chatbot</description>
+  <name>DIDComm AI Friends Chatbot</name>
+  <description>Deploy your own aifriends based DIDcomm chatbot</description>
   <url>https://github.com/2060-io/langchain-hologram-chatbot</url>
   <licenses>
     <license>
@@ -23,9 +23,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/2060-io/langchain-hologram-chatbot.git</connection>
-    <developerConnection>scm:git:ssh://github.com/2060-io/langchain-hologram-chatbot.git</developerConnection>
-    <url>https://github.com/2060-io/langchain-hologram-chatbot/tree/main</url>
+    <connection>scm:git:git://github.com/2060-io/aifriends-hologram-chatbot.git</connection>
+    <developerConnection>scm:git:ssh://github.com/2060-io/aifriends-hologram-chatbot.git</developerConnection>
+    <url>https://github.com/2060-io/aifriends-hologram-chatbot/tree/main</url>
   </scm>
    
   <properties>
