@@ -542,7 +542,7 @@ public class Service {
 				
 				mtProducer.sendMessage(TextMessage.build(message.getConnectionId(), message.getThreadId() , this.getMessage("CLEANED_HISTORY")));
 
-			}  else if ((session != null) && (session.getAuthTs() != null)) {
+			}  else if ((session != null) && ( (session.getAuthTs() != null)|| (!authEnabled) )) {
 				
 				if (content.startsWith(CMD_ROOT_MENU_ANIMATOR.toString())) {
 					
