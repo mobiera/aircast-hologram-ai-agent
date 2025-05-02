@@ -1,8 +1,8 @@
-# Ollama Hologram Chatbot
+# AI Friends - Hologram Verifiable AI Chatbot
 
-![Ollama](src/main/resources/META-INF/resources/avatar.png)
+![AI Friends](src/main/resources/META-INF/resources/avatar.png)
 
-A conversational service (chatbot) for for interacting with a Ollama server.
+A simple conversational demo service (chatbot) for chatting with AI Friends. Uses langchain and OpenAI.
 
 See [k8s/example](k8s/example/) for a deployment example.
 
