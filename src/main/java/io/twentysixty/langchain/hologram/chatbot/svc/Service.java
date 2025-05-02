@@ -1,15 +1,10 @@
 package io.twentysixty.langchain.hologram.chatbot.svc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -29,12 +24,9 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 import dev.langchain4j.data.message.SystemMessage;
 import io.twentysixty.langchain.hologram.chatbot.jms.MtProducer;
-import io.twentysixty.langchain.hologram.chatbot.jms.OllamaMsg;
-import io.twentysixty.langchain.hologram.chatbot.jms.LangchainProducer;
 import io.twentysixty.langchain.hologram.chatbot.model.Memory;
 import io.twentysixty.langchain.hologram.chatbot.model.Session;
 import io.twentysixty.langchain.hologram.chatbot.res.c.MediaResource;
-import io.twentysixty.langchain.hologram.chatbot.res.c.Resource;
 import io.twentysixty.sa.client.model.credential.CredentialType;
 import io.twentysixty.sa.client.model.message.BaseMessage;
 import io.twentysixty.sa.client.model.message.Claim;
@@ -75,7 +67,6 @@ public class Service {
 	
 	
 	@Inject MtProducer mtProducer;
-	@Inject LangchainProducer ollamaProducer;
 	
 	@Inject ChatBot bot;
 
