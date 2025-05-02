@@ -88,6 +88,8 @@ public class Service {
 	@ConfigProperty(name = "io.twentysixty.demos.auth.credential_issuer.label")
 	String invitationLabel;
 	
+	@ConfigProperty(name = "io.twentysixty.demos.auth.enabled")
+	Boolean authEnabled;
 	
 	
 	@ConfigProperty(name = "io.twentysixty.demos.auth.id_credential_def")
@@ -208,7 +210,12 @@ public class Service {
 		
 		mtProducer.sendMessage(this.getRootMenu(connectionId, null));
 		
-		mtProducer.sendMessage(this.getIdentityCredentialRequest(connectionId, null));
+		if (authEnabled) {
+			mtProducer.sendMessage(this.getIdentityCredentialRequest(connectionId, null));
+			
+		} else {
+			mtProducer.sendMessage(this.getAnimatorMenu(connectionId, null));
+		}
 		//entryPointCreate(connectionId, null, null);
 	}
 	
@@ -746,7 +753,7 @@ public class Service {
 		List<ContextualMenuItem> options = new ArrayList<ContextualMenuItem>();
 		
 		
-		if ((session == null) || (session.getAuthTs() == null) ){
+		if ((session == null) || (( authEnabled) && (session.getAuthTs() == null)  )){
 			menu.setDescription(getMessage("ROOT_MENU_DEFAULT_DESCRIPTION"));
 			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_AUTHENTICATE, getMessage("ROOT_MENU_AUTHENTICATE"), null));
 			if (ROOT_MENU_NO_CRED.isPresent()) {
@@ -797,7 +804,10 @@ public class Service {
 			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_HELP, this.getMessage("ROOT_MENU_HELP"), null));
 			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_ANIMATOR, this.getMessage("ROOT_MENU_ANIMS"), null));
 			
-			options.add(ContextualMenuItem.build(CMD_ROOT_MENU_LOGOUT, this.getMessage("ROOT_MENU_LOGOUT"), null));
+			if (authEnabled) {
+				options.add(ContextualMenuItem.build(CMD_ROOT_MENU_LOGOUT, this.getMessage("ROOT_MENU_LOGOUT"), null));
+				
+			}
 			
 		}
 		
