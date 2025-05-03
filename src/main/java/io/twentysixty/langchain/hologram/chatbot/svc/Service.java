@@ -146,6 +146,8 @@ public class Service {
 	@ConfigProperty(name = "io.twentysixty.langchain.hologram.chatbot.anim.random.commands")
 	Optional<String> changeCommands;
 	
+	@ConfigProperty(name = "io.twentysixty.langchain.hologram.chatbot.maxuserinputlength")
+	Integer maxUserInputLength;
 	
 	
 	private static String[] models = null;
@@ -508,6 +510,10 @@ public class Service {
 		}
 		if (content != null) {
 			content = content.strip();
+			
+			if (content.length()>maxUserInputLength) {
+				content = content.substring(0, maxUserInputLength);
+			}
 					
 			if (content.equals(CMD_ROOT_MENU_AUTHENTICATE.toString())) {
 				mtProducer.sendMessage(this.getIdentityCredentialRequest(message.getConnectionId(), message.getThreadId()));
