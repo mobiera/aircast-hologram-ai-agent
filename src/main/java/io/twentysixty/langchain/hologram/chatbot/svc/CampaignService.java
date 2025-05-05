@@ -41,16 +41,14 @@ public class CampaignService extends AbstractParameterService {
 		if (result != null) {
 			return result.getCampaigns();
 		}
-		
 		return new ArrayList<CampaignVO>();
 		
 	}
 	
-	@Tool("List currently executing campaigns by returning CmSchedule that represent campaigns and their schedule (when to run). Includes statistics from the current running campaigns")
+	@Tool("List currently executing campaigns by returning CmSchedule that represent campaigns and their schedule (when to run). Each returned CmSchedule includes at least the corresponding campaignId, campaignType, campaignName, and statistics from the current running campaigns")
 	public List<CmSchedule> listExecutingCampaigns() {
 		
 		List<CmSchedule> result = pmResource.getEnabledSchedules();
-		
 		return result;
 		
 	}
