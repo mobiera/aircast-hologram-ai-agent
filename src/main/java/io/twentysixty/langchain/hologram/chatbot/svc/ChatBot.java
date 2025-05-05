@@ -7,7 +7,7 @@ import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.enterprise.context.ApplicationScoped;
 
-@RegisterAiService()
+@RegisterAiService(tools = { ParameterService.class, CampaignService.class })
 @ApplicationScoped
 public interface ChatBot {
 
