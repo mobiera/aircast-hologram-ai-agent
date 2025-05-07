@@ -71,7 +71,7 @@ public class ParameterService extends AbstractParameterService {
 	public String getAsString(ParameterName name) {
 		
 		String value = null;
-		
+		logger.info("getAsString: getting parameter " + name);
 		synchronized (stringParams) {
 			Long ts = tss.get(name);
 			if ( (ts == null) || (System.currentTimeMillis()-ts>10000l)) {
