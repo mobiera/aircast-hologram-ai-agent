@@ -33,6 +33,8 @@ public class CampaignService extends AbstractParameterService {
 	@Inject
 	PmResource pmResource;
 	
+	private static final Logger logger = Logger.getLogger(CampaignService.class);
+	
 	
 	@Tool("List Aircast Campaigns. Set request.type=ADVERTISING for advertising campaigns, or request.type=SMS for sms campaigns.")
 	public List<CampaignVO> listCampaigns(ListCampaignsRequest request) {
@@ -45,15 +47,26 @@ public class CampaignService extends AbstractParameterService {
 		
 	}
 	
-	@Tool("List currently executing campaigns by returning CmSchedule that represent campaigns and their schedule (when to run). Each returned CmSchedule includes at least the corresponding campaignId, campaignType, campaignName, and statistics from the current running campaigns")
+	@Tool("List currently executing campaigns by returning a list of CmSchedule that represent Campaigns and their schedule (when to run). Each returned CmSchedule includes at least the corresponding campaignId, campaignType, campaignName, and statistics from the current running campaigns.")
 	public List<CmSchedule> listExecutingCampaigns() {
 		
 		List<CmSchedule> result = pmResource.getEnabledSchedules();
+		logger.info("listExecutingCampaigns: found " + result.size());
 		return result;
 		
 	}
 	
-	@Tool("Test an Aircast Campaign. Requires a msisdn (phone number with its country prefix), and campaignId, the id of the campaign. Campaign musn't be in DISABLED or ARCHIVED state.")
+	@Tool("Get an Aircast Campaign with its campaignId")
+	public CampaignVO getCampaign(Long campaignId) {
+		
+		CampaignVO c = pmResource.getCampaign(campaignId);
+		
+		return c;
+		
+	}
+	
+	
+	@Tool("Test an Aircast Campaign. Requires a msisdn (phone number with its country prefix), and campaignId, the id of the campaign. Campaign musn't be in DISABLED or ARCHIVED state. You can use the getCampaign tool to verify campaign state before testing the campaign.")
 	public void testCampaign(String msisdn, Long campaignId) {
 		TestCampaignRequest request = new TestCampaignRequest();
 		request.setId(campaignId);

@@ -83,7 +83,7 @@ public interface PmResource extends ParameterResourceInterface {
 	
 	   
 	@POST
-	   @Path("/ListCampaignSchedulesRequest")
+	   @Path("/aircast-slave-api-rest-server-war/api/pub/v1/campaign/ListCampaignSchedulesRequest")
 	   @Produces("application/json")
 	   public ListCampaignSchedulesRequestAnswer listCampaignSchedulesRequest(ListCampaignSchedulesRequest request);
 	
