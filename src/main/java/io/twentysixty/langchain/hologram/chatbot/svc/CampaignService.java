@@ -3,6 +3,9 @@ package io.twentysixty.langchain.hologram.chatbot.svc;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +17,13 @@ import com.mobiera.aircast.api.v1.campaign.ListCampaignsRequest;
 import com.mobiera.aircast.api.v1.campaign.ListCampaignsRequestAnswer;
 import com.mobiera.aircast.api.v1.campaign.TestCampaignRequest;
 import com.mobiera.aircast.api.v1.campaign.TestCampaignRequestAnswer;
+import com.mobiera.aircast.api.v1.campaign_schedule.ListCampaignSchedulesRequest;
 import com.mobiera.aircast.api.v1.campaign_schedule.ListCampaignSchedulesRequestAnswer;
 import com.mobiera.aircast.api.vo.CampaignScheduleVO;
 import com.mobiera.aircast.api.vo.CampaignVO;
 import com.mobiera.aircast.api.vo.ParameterVO;
 import com.mobiera.aircast.commons.enums.ParameterName;
+import com.mobiera.commons.enums.EntityState;
 import com.mobiera.ms.mno.aircast.api.CmSchedule;
 import com.mobiera.ms.mno.aircast.svc.AbstractParameterService;
 import com.mobiera.ms.mno.aircast.svc.ParameterResourceInterface;
@@ -32,6 +37,8 @@ public class CampaignService extends AbstractParameterService {
 	@RestClient
 	@Inject
 	PmResource pmResource;
+	
+	@Inject ParameterService parameterService;
 	
 	private static final Logger logger = Logger.getLogger(CampaignService.class);
 	
@@ -47,12 +54,28 @@ public class CampaignService extends AbstractParameterService {
 		
 	}
 	
-	@Tool("List currently executing campaigns by returning a list of CmSchedule that represent Campaigns and their schedule (when to run). Each returned CmSchedule includes at least the corresponding campaignId, campaignType, campaignName, and statistics from the current running campaigns.")
-	public List<CmSchedule> listExecutingCampaigns() {
+	
+	
+	
+	@Tool("List currently executing campaigns by returning a list of CampaignScheduleVO that represent Campaigns and their schedule (when to run). Each returned CampaignScheduleVO includes at least the corresponding campaignId, campaignType, campaignName, and statistics from the current running campaigns. Statistics from today are attributes that starts with today.")
+	public List<CampaignScheduleVO> listExecutingCampaigns() {
 		
-		List<CmSchedule> result = pmResource.getEnabledSchedules();
-		logger.info("listExecutingCampaigns: found " + result.size());
-		return result;
+		String tzStr = parameterService.getAsString(ParameterName.STRING_NODE_TIMEZONE);
+		
+		ZonedDateTime now = ZonedDateTime.now(ZoneId.of(tzStr));
+		
+		
+		
+		ListCampaignSchedulesRequest request = new ListCampaignSchedulesRequest();
+		request.setFromTs(now.truncatedTo(ChronoUnit.DAYS).toInstant());
+		request.setToTs(request.getFromTs().plusSeconds(86400));
+		request.setIncludeStates(List.of(EntityState.ENABLED));
+		ListCampaignSchedulesRequestAnswer result = pmResource.listCampaignSchedulesRequest(request);
+		 
+		 List<CampaignScheduleVO> campaigns = result.getCampaignSchedules();
+		 
+		logger.info("listExecutingCampaigns: found " + campaigns.size());
+		return campaigns;
 		
 	}
 	
